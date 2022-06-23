@@ -16,8 +16,8 @@ wsServer.on('connection', onConnect);
 
 function getPos(deltaX = 0, deltaY = 0, deltaWidth = 0, deltaHeight = 0) {
   const mousePos = robot.getMousePos();
-  const x = Math.min(mousePos.x + deltaX, 0);
-  const y = Math.min(mousePos.y + deltaY, 0);
+  const x = Math.max(mousePos.x + deltaX, 0);
+  const y = Math.max(mousePos.y + deltaY, 0);
 
   const screenSize = robot.getScreenSize();
   const width = Math.min(mousePos.x + deltaWidth, screenSize.width);
@@ -26,9 +26,20 @@ function getPos(deltaX = 0, deltaY = 0, deltaWidth = 0, deltaHeight = 0) {
   return { x, y, width, height };
 }
 
-function parseDelta(value) {
-  const delta = Number.parseInt(value);
-  return Number.isNaN(delta) ? 0 : delta;
+function parseValue(value) {
+  const x = Number.parseInt(value);
+  return Number.isNaN(x) ? 0 : x;
+}
+
+function drawRect(width, height) {
+  const pos = getPos(0, 0, width, height);
+  robot.setMouseDelay(200);
+  robot.mouseToggle('down');
+  robot.moveMouse(pos.width, pos.y);
+  robot.moveMouse(pos.width, pos.height);
+  robot.moveMouse(pos.x, pos.height);
+  robot.moveMouse(pos.x, pos.y);
+  robot.mouseToggle('up');
 }
 
 function onConnect(wsClient) {
@@ -39,23 +50,23 @@ function onConnect(wsClient) {
     console.log(commad);
     switch (commad[0]) {
       case 'mouse_up': {
-        const mousePos = robot.getMousePos();
-        robot.moveMouse(mousePos.x, mousePos.y - parseDelta(commad[1]));
+        const { x, y } = getPos(0, -parseValue(commad[1]));
+        robot.moveMouse(x, y);
         break;
       }
       case 'mouse_down': {
-        const mousePos = robot.getMousePos();
-        robot.moveMouse(mousePos.x, mousePos.y + parseDelta(commad[1]));
+        const { x, y } = getPos(0, parseValue(commad[1]));
+        robot.moveMouse(x, y);
         break;
       }
       case 'mouse_left': {
-        const mousePos = robot.getMousePos();
-        robot.moveMouse(mousePos.x - parseDelta(commad[1]), mousePos.y);
+        const { x, y } = getPos(-parseValue(commad[1]));
+        robot.moveMouse(x, y);
         break;
       }
       case 'mouse_right': {
-        const mousePos = robot.getMousePos();
-        robot.moveMouse(mousePos.x + parseDelta(commad[1]), mousePos.y);
+        const { x, y } = getPos(parseValue(commad[1]));
+        robot.moveMouse(x, y);
         break;
       }
       case 'mouse_position': {
@@ -67,9 +78,14 @@ function onConnect(wsClient) {
         break;
       }
       case 'draw_rectangle': {
+        const width = parseValue(commad[1]);
+        const height = parseValue(commad[2]);
+        drawRect(width, height);
         break;
       }
       case 'draw_square': {
+        const width = parseValue(commad[1]);
+        drawRect(width, width);
         break;
       }
       case 'prnt_scrn': {
