@@ -6,7 +6,7 @@ import { getPos } from '../helper/helper';
 import { parseValue } from '../helper/parser';
 import { drawRect, drawCircle } from '../helper/drawer';
 
-const WS_PORT = parseInt(process.env.WS_PORT as string) || 80;
+const WS_PORT = parseInt(process.env.WS_PORT as string) || 8000;
 const SCREEN_SIZE = parseInt(process.env.SCREEN_SIZE as string) || 200;
 
 export const wsServerStart = () => {
