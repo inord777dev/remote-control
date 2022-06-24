@@ -26,3 +26,4 @@ export const httpServerStart = () => {
 
   console.log(`Start static http server on the ${HTTP_PORT} port!`);
 }
+

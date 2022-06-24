@@ -3,6 +3,3 @@ import { wsServerStart } from './src/ws_server/index';
 
 httpServerStart();
 wsServerStart();
-
-
-

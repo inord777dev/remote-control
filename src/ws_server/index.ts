@@ -2,8 +2,9 @@ import 'dotenv/config';
 import { WebSocketServer } from 'ws';
 import robot from 'robotjs';
 import Jimp from 'jimp';
-import { drawRect, getPos } from '../helper/helper';
+import { getPos } from '../helper/helper';
 import { parseValue } from '../helper/parser';
+import { drawRect, drawCircle } from '../helper/drawer';
 
 const WS_PORT = parseInt(process.env.WS_PORT as string) || 80;
 const SCREEN_SIZE = parseInt(process.env.SCREEN_SIZE as string) || 200;
@@ -45,16 +46,7 @@ export const wsServerStart = () => {
         }
         case 'draw_circle': {
           const radius = parseValue(commad[1]);
-          const { x, y } = getPos(0, radius);
-          robot.setMouseDelay(2);
-          robot.mouseToggle('down');
-          for (let gradus = -90; gradus <= 270; gradus += 1) {
-            const currentAngle = (gradus * Math.PI) / 180;
-            const deltaX = Math.cos(currentAngle) * radius;
-            const deltaY = Math.sin(currentAngle) * radius;
-            robot.moveMouse(x + deltaX, y + deltaY);
-          }
-          robot.mouseToggle('up');
+          drawCircle(radius);
           break;
         }
         case 'draw_rectangle': {
