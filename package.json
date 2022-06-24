@@ -5,15 +5,18 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "start": "node ./index.js",
-        "start:dev": "nodemon ./index.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "start": "ts-node ./index.ts",
+        "start:dev": "nodemon --exec ts-node ./index.ts"
     },
     "author": "Andrei Auchynnikau",
     "keywords": [],
     "license": "ISC",
     "devDependencies": {
-        "nodemon": "^2.0.16"
+        "@types/ws": "^8.5.3",
+        "dotenv": "^16.0.1",
+        "nodemon": "^2.0.16",
+        "ts-node": "^10.8.1",
+        "typescript": "^4.7.4"
     },
     "dependencies": {
         "jimp": "^0.16.1",
