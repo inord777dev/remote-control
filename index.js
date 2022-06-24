@@ -1,7 +1,7 @@
-// import Jimp from 'jimp';
-import { httpServer } from './src/http_server/index.js';
-import robot from 'robotjs';
 import { WebSocketServer } from 'ws';
+import Jimp from 'jimp';
+import robot from 'robotjs';
+import { httpServer } from './src/http_server/index.js';
 
 const HTTP_PORT = 3000;
 const WS_PORT = 8000;
@@ -75,6 +75,17 @@ function onConnect(wsClient) {
         break;
       }
       case 'draw_circle': {
+        const radius = parseValue(commad[1]);
+        const { x, y } = getPos(0, radius);
+        robot.setMouseDelay(2);
+        robot.mouseToggle('down');
+        for (let gradus = -90; gradus <= 270; gradus += 1) {
+          const currentAngle = (gradus * Math.PI) / 180;
+          const deltaX = Math.cos(currentAngle) * radius;
+          const deltaY = Math.sin(currentAngle) * radius;
+          robot.moveMouse(x + deltaX, y + deltaY);
+        }
+        robot.mouseToggle('up');
         break;
       }
       case 'draw_rectangle': {
@@ -89,16 +100,24 @@ function onConnect(wsClient) {
         break;
       }
       case 'prnt_scrn': {
-        const mousePos = robot.getMousePos();
-        const x = Math.min(mousePos.x, 0);
-        const y = Math.min(mousePos.y, 0);
-
-        const screenSize = robot.getScreenSize();
-        const width = Math.min(mousePos.x + SCREEN_SIZE, screenSize.width);
-        const height = Math.min(mousePos.y + SCREEN_SIZE, screenSize.height);
-
-        const bitmap = robot.screen.capture(x, y, width, height);
-        wsClient.send(bitmap.image.toString('base64'));
+        const { x, y, width, height } = getPos(
+          -SCREEN_SIZE / 2,
+          -SCREEN_SIZE / 2
+        );
+        var picture = robot.screen.capture(x, y, SCREEN_SIZE, SCREEN_SIZE);
+        var image = new Jimp(picture.width, picture.height, function (
+          err,
+          img
+        ) {
+          img.bitmap.data = picture.image;
+          img.getBuffer(Jimp.MIME_PNG, (err, png) => {
+            image.getBase64(Jimp.MIME_PNG, (err, value) => {
+              wsClient.send(
+                `prnt_scrn ${value.replace('data:image/png;base64,', '')}`
+              );
+            });
+          });
+        });
         break;
       }
     }
