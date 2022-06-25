@@ -5,10 +5,10 @@ export function drawRect(width: number, height: number) {
   const pos = getPos(0, 0, width, height);
   robot.setMouseDelay(200);
   robot.mouseToggle('down');
-  robot.moveMouse(pos.width, pos.y);
-  robot.moveMouse(pos.width, pos.height);
-  robot.moveMouse(pos.x, pos.height);
-  robot.moveMouse(pos.x, pos.y);
+  robot.moveMouseSmooth(pos.width, pos.y);
+  robot.moveMouseSmooth(pos.width, pos.height);
+  robot.moveMouseSmooth(pos.x, pos.height);
+  robot.moveMouseSmooth(pos.x, pos.y);
   robot.mouseToggle('up');
 }
 
