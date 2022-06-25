@@ -24,5 +24,5 @@
 
 **All commands**
 
-`npm run dev` | Start app with nodemon
-`npm run start` | Start app without nodemon
+* `npm run dev` | Start app with nodemon
+* `npm run start` | Start app without nodemon

@@ -20,7 +20,7 @@ export const wsServerStart = () => {
       decodeStrings: false,
     });
 
-    duplex.on("data", function (message) {
+    duplex.on("data", function (message: string) {
       console.log(`Received: ${message}\0`);
 
       const commad = message.toString().split(" ");
@@ -88,7 +88,7 @@ export const wsServerStart = () => {
             },
             function (err: Error | null, img:Jimp) {
               if (err) {
-                console.log("prnt_scrn", err);
+                console.log("prnt_scrn\0", err);
               } else {
                 img.getBase64(Jimp.MIME_PNG, (err, value) => {
                 sendMessage(`prnt_scrn ${value.replace('data:image/png;base64,', '')}`);
@@ -102,8 +102,8 @@ export const wsServerStart = () => {
     });
 
     function sendMessage(msg: string) {
-      duplex.write(msg, "utf8");
-      console.log(`Result: ${msg}\0`);
+      duplex.write(`${msg}\0`, "utf8");
+      console.log(`Answer: ${msg}\0`);
     }
 
     wsClient.on("close", function () {
