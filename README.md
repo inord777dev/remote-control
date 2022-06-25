@@ -1,4 +1,4 @@
-# RSSchool NodeJS websocket task template
+# RSSchool NodeJS websocket task inord777
 > Static http server and base task packages.
 
 ## Installation
@@ -10,21 +10,19 @@
 
 `npm run start:dev`
 
-* App served @ `http://localhost:8181` with nodemon
+* Static http server @ `http://localhost:3000` with nodemon
+* Web socket served @ `http://localhost:8080` with nodemon
 
 **Production**
 
 `npm run start`
 
-* App served @ `http://localhost:8181` without nodemon
+* Static http server @ `http://localhost:3000` without nodemon
+* Web socket served @ `http://localhost:8080` without nodemon
 
 ---
 
 **All commands**
 
-Command | Description
---- | ---
-`npm run dev` | App served @ `http://localhost:8181` with nodemon
-`npm run start` | App served @ `http://localhost:8181` without nodemon
-
-**Note**: replace `npm` with `yarn` in `package.json` if you use yarn.
+`npm run dev` | Start app with nodemon
+`npm run start` | Start app without nodemon
